@@ -1,7 +1,7 @@
 /* 
  * CS:APP Data Lab 
  * 
- * <Please put your name and userid here>
+ * hengyue kang
  * 
  * bits.c - Source file with your solutions to the Lab.
  *          This is the file you will hand in to your instructor.
@@ -142,18 +142,26 @@ NOTES:
  *   Max ops: 14
  *   Rating: 1
  */
+// try logical expression from discrete math
+// ~:opposite situation
+// or:combine different situation
+// &:find the common part
 int bitXor(int x, int y) {
-  return 2;
+  int temp1=~(x&y);
+  int temp2=(~x&~y);
+  int temp3=~temp2;
+  return temp1&temp3;
 }
-/* 
+/*
  * tmin - return minimum two's complement integer 
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 4
  *   Rating: 1
  */
 int tmin(void) {
-
-  return 2;
+  int temp1=0;
+  int temp2=(1<<31);
+  return temp1|temp2;
 
 }
 //2
@@ -165,7 +173,8 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-  return 2;
+  int temp=x^(x+1);
+  return !(~temp);
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -175,8 +184,17 @@ int isTmax(int x) {
  *   Max ops: 12
  *   Rating: 2
  */
+// 0xAAAAAAAA is the basic situation
+// use it as mask
 int allOddBits(int x) {
-  return 2;
+  int mask=0xAA;
+  // get the full task
+  mask=mask|(mask<<8);
+  mask=mask|(mask<<16);
+  // if true,get the mask
+  int temp=x&mask;
+  // get 1 to return ,avoid type casting as possible
+  return !(~(temp+(~mask)));
 }
 /* 
  * negate - return -x 
@@ -186,7 +204,7 @@ int allOddBits(int x) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+  return (~x)+1;
 }
 //3
 /* 
