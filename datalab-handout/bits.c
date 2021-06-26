@@ -216,8 +216,18 @@ int negate(int x) {
  *   Max ops: 15
  *   Rating: 3
  */
+// priority: & better than >>
+// make use of overflow ,find the bounder
 int isAsciiDigit(int x) {
-  return 2;
+  int sign=(1<<31);
+  // if x>0x39 ,overflow happens when x+upper
+  int upper=~(sign|0x39);
+  // if x<30, (lower+x+1) remain negative
+  int lower=~0x30;
+  // only maintain sign bit
+  upper=(sign&(upper+x))>>31;
+  lower=(sign&(lower+x+1))>>31;
+  return !(upper|lower);
 }
 /* 
  * conditional - same as x ? y : z 
@@ -227,6 +237,7 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
+  
   return 2;
 }
 /* 
