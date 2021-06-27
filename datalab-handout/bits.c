@@ -236,9 +236,12 @@ int isAsciiDigit(int x) {
  *   Max ops: 16
  *   Rating: 3
  */
+// !x:if(x==0)->1;else 0
 int conditional(int x, int y, int z) {
-  
-  return 2;
+  // x!=0,temp->0;x==0,temp->all 1
+  int temp=~(!x)+1;
+  // temp=0,y|0=y;temp=0xffffffff,0|z=z
+  return (~temp&y)|(temp&z);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -247,8 +250,14 @@ int conditional(int x, int y, int z) {
  *   Max ops: 24
  *   Rating: 3
  */
+// y-x=y+(~x+1)
+// a^b=(~x&~y)|(~y&x)
 int isLessOrEqual(int x, int y) {
-  return 2;
+  // sign bit for different numbers
+  int sx=(x>>31)&0x1;
+  int sy=(y>>31)&0x1;
+  int sdiff=((y+(~x+1))>>31)&0x1;
+  return (((sx^sy)&sx)|(!sdiff)&(!(sx^sy)));
 }
 //4
 /* 
