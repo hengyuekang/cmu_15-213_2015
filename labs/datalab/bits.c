@@ -142,17 +142,13 @@ NOTES:
  *   Max ops: 14
  *   Rating: 1
  */
-// try logical expression from discrete math
-// ~:opposite situation
-// or:combine different situation
-// &:find the common part
 int bitXor(int x, int y) {
   int temp1=~(x&y);
   int temp2=(~x&~y);
   int temp3=~temp2;
   return temp1&temp3;
 }
-/*
+/* 
  * tmin - return minimum two's complement integer 
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 4
@@ -174,7 +170,7 @@ int tmin(void) {
  */
 int isTmax(int x) {
   int temp=x^(x+1);
-  return !(~temp);
+  return !(temp)&!!(x+1);
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -184,8 +180,6 @@ int isTmax(int x) {
  *   Max ops: 12
  *   Rating: 2
  */
-// 0xAAAAAAAA is the basic situation
-// use it as mask
 int allOddBits(int x) {
   int mask=0xAA;
   // get the full task
@@ -216,8 +210,6 @@ int negate(int x) {
  *   Max ops: 15
  *   Rating: 3
  */
-// priority: & better than >>
-// make use of overflow ,find the bounder
 int isAsciiDigit(int x) {
   int sign=(1<<31);
   // if x>0x39 ,overflow happens when x+upper
@@ -236,7 +228,6 @@ int isAsciiDigit(int x) {
  *   Max ops: 16
  *   Rating: 3
  */
-// !x:if(x==0)->1;else 0
 int conditional(int x, int y, int z) {
   // x!=0,temp->0;x==0,temp->all 1
   int temp=~(!x)+1;
@@ -250,8 +241,6 @@ int conditional(int x, int y, int z) {
  *   Max ops: 24
  *   Rating: 3
  */
-// y-x=y+(~x+1)
-// a^b=(~x&~y)|(~y&x)
 int isLessOrEqual(int x, int y) {
   // sign bit for different numbers
   int sx=(x>>31)&0x1;
@@ -269,6 +258,7 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
+  
   return 2;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
