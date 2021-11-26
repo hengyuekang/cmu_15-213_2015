@@ -169,7 +169,10 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-  int temp=x^(x+1);
+  // ^<==>"=="
+  int temp=~(x+1)^x;
+  // !:holistc identity
+  // ~:change every bit
   return !(temp)&!!(x+1);
 }
 /* 
@@ -257,9 +260,19 @@ int isLessOrEqual(int x, int y) {
  *   Max ops: 12
  *   Rating: 4 
  */
+/*
+top to down
+differ different situation using internal signs
+consider special values
+connect all signs using true-value table
+*/
 int logicalNeg(int x) {
-  
-  return 2;
+  int s1=x>>31;
+
+  int negx=~x+1;
+  int s2=negx>>31;
+  int tmp=(~(x^negx))&(~(s1^s2))&(~s1);
+  return ~tmp+1;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
