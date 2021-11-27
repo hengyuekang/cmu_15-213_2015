@@ -287,7 +287,26 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+  int sign=x>>31;
+  // x>=0->x;x<0->~x
+  x=(sign&~x)|(~sign&x);
+  // logical if:!!x
+  // high16==0->res+=0
+  // high!=0->res+=16(you need at least 16 before these high 16bits)
+  // look up high,determine low
+  int b16=(!!(x>>16))<<4;
+  x>>=b16;
+  // binary find
+  int b8=(!!(x>>8))<<3;
+  x>>=b8;
+  int b4=(!!(x>>4))<<2;
+  x>>=b4;
+  int b2=(!!(x>>2))<<1;
+  x>>=b2;
+  int b1=!!(x>>1);
+  x>>=b1;
+  int b0=x;   
+  return b16+b8+b4+b2+b1+b0+1;
 }
 //float
 /* 
