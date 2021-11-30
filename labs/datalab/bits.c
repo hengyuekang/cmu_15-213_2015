@@ -254,7 +254,7 @@ int isLessOrEqual(int x, int y)
   int sx = (x >> 31) & 0x1;
   int sy = (y >> 31) & 0x1;
   int sdiff = ((y + (~x + 1)) >> 31) & 0x1;
-  return (((sx ^ sy) & sx) | (!sdiff) & (!(sx ^ sy)));
+  return (((sx ^ sy) & sx) | ((!sdiff) & (!(sx ^ sy))));
 }
 //4
 /* 
@@ -295,24 +295,31 @@ int logicalNeg(int x)
 int howManyBits(int x)
 {
   int sign = x >> 31;
+  int b16,b8,b4,b2,b1,b0;
   // x>=0->x;x<0->~x
   x = (sign & ~x) | (~sign & x);
   // logical if:!!x
   // high16==0->res+=0
   // high!=0->res+=16(you need at least 16 before these high 16bits)
   // look up high,determine low
-  int b16 = (!!(x >> 16)) << 4;
+  // int b16;
+  b16=(!!(x >> 16)) << 4;
   x >>= b16;
   // binary find
-  int b8 = (!!(x >> 8)) << 3;
+  // int b8 ;
+  b8= (!!(x >> 8)) << 3;
   x >>= b8;
-  int b4 = (!!(x >> 4)) << 2;
+  // int b4;
+  b4 = (!!(x >> 4)) << 2;
   x >>= b4;
-  int b2 = (!!(x >> 2)) << 1;
+  // int b2;
+  b2 = (!!(x >> 2)) << 1;
   x >>= b2;
-  int b1 = !!(x >> 1);
+  // int b1 ;
+  b1= !!(x >> 1);
   x >>= b1;
-  int b0 = x;
+  // int b0 ;
+  b0= x;
   return b16 + b8 + b4 + b2 + b1 + b0 + 1;
 }
 //float
@@ -330,10 +337,11 @@ int howManyBits(int x)
 unsigned floatScale2(unsigned uf)
 {
   // unsigned tmp=uf;
+  unsigned frac;
   unsigned s = (uf >> 31) << 8;
   unsigned exp = uf >> 23;
   exp ^= s;
-  unsigned frac = (uf << 9) >> 9;
+  frac =(uf << 9) >> 9;
   if (exp == 0xff)
   {
     return uf;
@@ -418,13 +426,13 @@ unsigned floatPower2(int x)
   // small
   else if (x < -148)
     return 0;
-    // positive
+  // normal
   else if (x >= -126)
   {
     int exp = x + 127;
     return (exp << 23);
   }
-  // negative
+  // non-normal
   else
   {
     int t = 148 + x;
