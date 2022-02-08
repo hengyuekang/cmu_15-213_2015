@@ -96,6 +96,7 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
     }
     else
     {
+        // 16:make the best use of cache in one block
         for(int i=0;i<N;i+=16){
             for(int j=0;j<M;j+=16){
                 for(int k=i;k<i+16&&k<N;k++){
