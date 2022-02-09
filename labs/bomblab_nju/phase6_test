@@ -1,0 +1,61 @@
+ans:arr[7],to select 7 nodes
+int1=0
+while(int1<=6)
+{
+    arr[int1]>0
+    arr[int1]<=7
+    int2=int1+1
+    while(int2<=6)
+    {
+        arr[int1]!=arr[int2]
+        int2++;
+    }
+    int1++
+}
+arr distinguished each other<=7,!=0
+int1=0
+node1=&first,node{num1,num2,*next}
+node* node_arr[7]
+0x804c0e8 <node7>:	0x00000005	0x00000007	0x00000000	0x00000002
+0x804c0f8 <node6+4>:	0x00000006	0x0804c0e8	0x00000000	0x00000005
+0x804c108 <node5+8>:	0x0804c0f4	0x00000007	0x00000004	0x0804c100
+0x804c118 <node3>:	0x00000006	0x00000003	0x0804c10c	0x00000003
+0x804c128 <node2+4>:	0x00000002	0x0804c118	0x00000009	0x00000001
+0x804c138 <node1+8>:	0x0804c124
+node7(num1)={9,3,6,7,0,2,5}
+int1=0
+while(int1<=6)
+{
+    node2=node1(0x804c130)
+    int2=1
+    while(int2<arr[int1])
+    {
+        node2=node2->next
+        int2++
+    }
+    node_arr[int1]=node2
+    int1++
+}
+get node(arr[int1])
+arr={5,6,2,7,3,4,1}(last:no need to get and !=0)
+    node5,6,2,7,3,4,1
+    {0,2,3,5,6,7,9}
+int1=1
+node2=node_arr[0]
+while(int1<=6)
+{
+    node2->next=node_arr[int1]
+    node2=node2->next
+    int1++
+}
+link node_arr
+node_arr[6]->next=0
+int1=0
+node2=node_arr[0]
+while(int1<=5)
+{
+    {0,2,3,5,6,7,9}
+    (node2->num1)<=(node2->next->num1)
+    node2=node2->next
+    int1++
+}

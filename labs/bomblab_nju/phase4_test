@@ -1,0 +1,29 @@
+func4(int *arr,int1,int2)
+{
+    if(int1>=int2)
+    {
+        return *(arr+4*int2)
+    }
+    else
+    {
+        res1=func4(arr,int1,(int1+int2)/2)
+        res2=func4(arr,(int1+int2)/2,int2)
+        return max(res1,res2)
+    }
+}
+
+
+(gdb) backtrace
+#0  0x0804969d in func4 ()
+#1  0x0804969a in func4 ()
+#2  0x0804969a in func4 ()
+#3  0x0804969a in func4 ()
+#4  0x0804969a in func4 ()
+#5  0x0804969a in func4 ()
+#6  0x0804973e in phase_4 ()
+#7  0x080493c0 in main (argc=2, argv=0xbffff664) at bomb.c:104
+
+
+
+
+
