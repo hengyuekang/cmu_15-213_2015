@@ -88,6 +88,14 @@ handler_t *Signal(int signum, handler_t *handler);
 /*
  * main - The shell's main routine 
  */
+pid_t Fork()
+{
+    pid_t pid;
+    if((pid=fork())<0)
+        unix_error("Fork error");
+    return pid;
+}
+
 int main(int argc, char **argv) 
 {
     char c;
@@ -166,20 +174,38 @@ int main(int argc, char **argv)
 void eval(char *cmdline) 
 {
     char *argv[MAXARGS];
-    int bg;
-    if(parseline(cmdline,argv)) bg=1;
-    else bg=0;//to distinguish bg or fg
+    int bg=parseline(cmdline,argv);
+    pid_t pid;
     if(!builtin_cmd(argv))
     {
+        //add fg and bg to jobs
+        sigset_t mask_all,mask_one,prev_one;
+        if(sigfillset(&mask_all)) unix_error("sigfillset error");
+        if(sigemptyset(&mask_one)) unix_error("sigemptyset error");
+        if(sigaddset(&mask_one,SIGCHLD)) unix_error("sigaddset SIGCHLD error");
+        //promise add a valid pid to jobs
+        if(sigprocmask(SIG_BLOCK,&mask_one,&prev_one)) unix_error("sigprocmask block SIGCHLD error");//for parents, promise that add before delete
+        //for non-builtin, execute in a child process
+        if((pid=Fork())==0)
+        {
+            if(sigprocmask(SIG_SETMASK,&prev_one,NULL)) unix_error("sigprocmask set prev mask error");
+            if(execve(argv[0],argv,environ)<0){
+                printf("%s: Command not found.\n",argv[0]);
+                _Exit(1);
+            }
+        }
+        if(sigprocmask(SIG_BLOCK,&mask_all,NULL)) unix_error("sigprocmask block mask_all error");//like disabling interrupt in kernel scheduler
         if(bg)
         {
-            
+            //block:still be sent but process not receive
+            addjob(jobs,pid,BG,cmdline);
+            printf("[%d] (%d) %s",pid2jid(pid),pid,cmdline);//print jid & pid for bg jobs
         }
         else
         {
-            
+            addjob(jobs,pid,FG,cmdline);
         }
-        
+        if(sigprocmask(SIG_SETMASK,&prev_one,NULL)) unix_error("sigprocmask set mask prev_one error");//enable interrupt
     }
     return;
 }
@@ -246,7 +272,7 @@ int parseline(const char *cmdline, char **argv)
  *    it immediately.  
  */
 int builtin_cmd(char **argv) 
-{
+{//all builtin_cmd is forehead
     if(!argv) return 0;
     char buf[MAXLINE];
     strcpy(buf, argv[0]);
@@ -294,6 +320,8 @@ void waitfg(pid_t pid)
  */
 void sigchld_handler(int sig) 
 {
+    // int olderrno=errno;
+
     return;
 }
 
@@ -513,7 +541,7 @@ void app_error(char *msg)
 /*
  * Signal - wrapper for the sigaction function
  */
-handler_t *Signal(int signum, handler_t *handler) 
+handler_t *Signal(int signum, handler_t *handler) //hand sig in a specific manner
 {
     struct sigaction action, old_action;
 
